@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996374279380",
+    "project_id": "decider-aa8ef",
+    "storage_bucket": "decider-aa8ef.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996374279380:android:0c40e746f88226b07b7741",
+        "android_client_info": {
+          "package_name": "com.bitnusa.decider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKB5GUdZGZbjjjay6H4NgEreeFreZhmxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

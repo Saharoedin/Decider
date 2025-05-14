@@ -1,0 +1,7 @@
+analyzer:
+  errors:
+    unnecessary_string_interpolations: ignore
+include: package:flutter_lints/flutter.yaml
+linter:
+  rules:
+    ignore: prefer_const_constructors

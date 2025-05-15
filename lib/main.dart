@@ -1,15 +1,20 @@
+import 'package:decider/app/data/providers/admob_provider.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+  final initAdFuture = MobileAds.instance.initialize();
+  final adMobService = AdmobProvider(initAdFuture);
   await Firebase.initializeApp();
   await AuthProvider().getOrCreateUser();
 
@@ -17,6 +22,7 @@ void main() async {
     MultiProvider(
       providers: [
         Provider.value(value: AuthProvider()),
+        Provider.value(value: adMobService),
       ],
       child: DeciderApp(),
     ),

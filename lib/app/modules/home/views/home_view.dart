@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decider/app/data/models/account_model.dart';
 import 'package:decider/app/data/models/question_model.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:decider/app/modules/home/views/history_question.dart';
@@ -224,7 +222,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-              Text('Account Type : Premium '),
+              Text('Account Type : Free '),
               Text('${context.read<AuthProvider>().currenctUser!.uid}'),
             ],
           ),

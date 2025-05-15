@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import '../models/question_model.dart';
 

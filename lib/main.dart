@@ -13,8 +13,6 @@ import 'app/routes/app_pages.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  final initAdFuture = MobileAds.instance.initialize();
-  final adMobService = AdmobProvider(initAdFuture);
   await Firebase.initializeApp();
   await AuthProvider().getOrCreateUser();
 
@@ -22,7 +20,6 @@ void main() async {
     MultiProvider(
       providers: [
         Provider.value(value: AuthProvider()),
-        Provider.value(value: adMobService),
       ],
       child: DeciderApp(),
     ),

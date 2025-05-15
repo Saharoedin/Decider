@@ -2,6 +2,7 @@ import 'package:decider/app/data/models/question_model.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:decider/app/modules/home/views/history_question.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,9 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.initBannerAd();
+    });
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -48,7 +52,6 @@ class HomeView extends GetView<HomeController> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
           width: Get.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,6 +104,7 @@ class HomeView extends GetView<HomeController> {
               ),
               Expanded(
                 child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -224,6 +228,16 @@ class HomeView extends GetView<HomeController> {
               ),
               Text('Account Type : Free '),
               Text('${context.read<AuthProvider>().currenctUser!.uid}'),
+              Obx(
+                () => controller.isBannerAdReady.value == true
+                    ? Container(
+                        margin: EdgeInsets.only(top: 16),
+                        height: 60,
+                        width: Get.width,
+                        child: AdWidget(ad: controller.bannerAd!),
+                      )
+                    : SizedBox(),
+              )
             ],
           ),
         ),

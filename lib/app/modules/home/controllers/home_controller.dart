@@ -4,11 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decider/app/data/models/account_model.dart';
 import 'package:decider/app/data/models/question_model.dart';
 import 'package:decider/app/data/providers/account_provider.dart';
+import 'package:decider/app/data/providers/admob_provider.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:decider/app/data/providers/question_provider.dart';
+import 'package:decider/app/modules/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
 
 class HomeController extends GetxController {
   TextEditingController txtQuestion = TextEditingController();
@@ -91,9 +95,31 @@ class HomeController extends GetxController {
     );
   }
 
+  BannerAd? bannerAd;
+  var isBannerAdReady = false.obs;
+
+  void initBannerAd() {
+    bannerAd = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdmobProvider().bannerUnitId!,
+      listener: AdmobProvider().bannerAdListener,
+      request: AdRequest(),
+    )..load();
+
+    if (bannerAd != null) {
+      isBannerAdReady.value = true;
+    }
+  }
+
   @override
   void onInit() {
     getAccountInformation();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    bannerAd?.dispose(); // penting: bersihkan resource
+    super.onClose();
   }
 }

@@ -4,10 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobProvider {
-  Future<InitializationStatus> initializationStatus;
-
-  AdmobProvider(this.initializationStatus);
-
   String? get bannerUnitId {
     if (kReleaseMode) {
       if (Platform.isIOS) {
@@ -58,4 +54,14 @@ class AdmobProvider {
     }
     return null;
   }
+
+  final BannerAdListener bannerAdListener = BannerAdListener(
+    onAdLoaded: (ad) => print('Ad Loaded'),
+    onAdFailedToLoad: (ad, error) {
+      ad.dispose();
+      print(error);
+    },
+    onAdOpened: (ad) => print('Ad Opened'),
+    onAdClosed: (ad) => print('Ad Closed'),
+  );
 }

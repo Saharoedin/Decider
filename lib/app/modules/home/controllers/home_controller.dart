@@ -96,7 +96,10 @@ class HomeController extends GetxController {
   }
 
   BannerAd? bannerAd;
+  InterstitialAd? interstitialAd;
   var isBannerAdReady = false.obs;
+  var isIntertitialAdReady = false.obs;
+  var isRewardReady = false.obs;
 
   void initBannerAd() {
     bannerAd = BannerAd(
@@ -109,6 +112,31 @@ class HomeController extends GetxController {
     if (bannerAd != null) {
       isBannerAdReady.value = true;
     }
+  }
+
+  void initIntertitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdmobProvider().interstitialUnitId!,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          interstitialAd = ad;
+          isIntertitialAdReady.value = true;
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              ad.dispose();
+            },
+          );
+          ad.show();
+        },
+        onAdFailedToLoad: (error) {
+          interstitialAd = null;
+        },
+      ),
+    );
   }
 
   @override

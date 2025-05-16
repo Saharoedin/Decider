@@ -162,6 +162,7 @@ class HomeView extends GetView<HomeController> {
                                             false) {
                                           if (_formKey.currentState!
                                               .validate()) {
+                                            controller.initIntertitialAd();
                                             controller.getAnswer();
                                             controller.saveToDatabase(
                                               Question(

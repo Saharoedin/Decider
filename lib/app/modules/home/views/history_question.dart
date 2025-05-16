@@ -83,32 +83,17 @@ class HistoryQuestion extends StatelessWidget {
                       }
 
                       return isShowBanner
-                          ? Container(
-                              height: 60,
-                              child: AdWidget(ad: bannerAd!),
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 60,
+                                  child: AdWidget(ad: bannerAd!),
+                                ),
+                                HistoryItem(q: q)
+                              ],
                             )
-                          : ListTile(
-                              shape: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey.shade300,
-                                ),
-                              ),
-                              title: Text(
-                                'Should I ${q.query}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${q.answer}',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              trailing: Text(
-                                  '${DateFormat('dd/MM/yyyy HH:mm').format(q.createdAt!)}'),
-                            );
+                          : HistoryItem(q: q);
                     },
                   );
                 },
@@ -117,6 +102,40 @@ class HistoryQuestion extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HistoryItem extends StatelessWidget {
+  const HistoryItem({
+    super.key,
+    required this.q,
+  });
+
+  final Question q;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      shape: Border(
+        bottom: BorderSide(
+          color: Colors.grey.shade300,
+        ),
+      ),
+      title: Text(
+        'Should I ${q.query}',
+        style: TextStyle(
+          fontSize: 14,
+        ),
+      ),
+      subtitle: Text(
+        '${q.answer}',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      trailing: Text('${DateFormat('dd/MM/yyyy HH:mm').format(q.createdAt!)}'),
     );
   }
 }

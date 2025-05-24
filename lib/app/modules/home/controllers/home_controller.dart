@@ -7,12 +7,10 @@ import 'package:decider/app/data/providers/account_provider.dart';
 import 'package:decider/app/data/providers/admob_provider.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:decider/app/data/providers/question_provider.dart';
-import 'package:decider/app/modules/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 class HomeController extends GetxController {
   TextEditingController txtQuestion = TextEditingController();
@@ -60,10 +58,10 @@ class HomeController extends GetxController {
     }
   }
 
-  void updateBankAccount(String uid) async {
+  void updateBankAccount(String uid, int qty) async {
     var data = Account(
       uid: uid,
-      bank: 1,
+      bank: qty,
       nextFreeQuestion: DateTime.now(),
     );
     await AccountProvider().updateAccountInformation(data, uid);
@@ -134,6 +132,36 @@ class HomeController extends GetxController {
         },
         onAdFailedToLoad: (error) {
           interstitialAd = null;
+        },
+      ),
+    );
+  }
+
+  void initRewardedAd(String uid) {
+    RewardedAd.load(
+      adUnitId: AdmobProvider().rewardUnitId!,
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              isRewardReady.value = false;
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              ad.dispose();
+              isRewardReady.value = true;
+            },
+          );
+          ad.show(
+            onUserEarnedReward: (ad, reward) {
+              updateBankAccount(uid, account.value.bank + 2);
+              isRewardReady.value = false;
+            },
+          );
+        },
+        onAdFailedToLoad: (error) {
+          //
         },
       ),
     );

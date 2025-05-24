@@ -1,6 +1,7 @@
 import 'package:decider/app/data/models/question_model.dart';
 import 'package:decider/app/data/providers/auth_provider.dart';
 import 'package:decider/app/modules/home/views/history_question.dart';
+import 'package:decider/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +30,9 @@ class HomeView extends GetView<HomeController> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: Icon(Icons.shopping_bag),
+            child: GestureDetector(
+                onTap: () => Get.toNamed(Routes.STORE),
+                child: Icon(Icons.shopping_bag)),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -91,13 +94,39 @@ class HomeView extends GetView<HomeController> {
                               interval: Duration(seconds: 1),
                               onFinished: () {
                                 controller.clearInput();
-                                controller.updateBankAccount(context
-                                    .read<AuthProvider>()
-                                    .currenctUser!
-                                    .uid);
+                                controller.updateBankAccount(
+                                  context
+                                      .read<AuthProvider>()
+                                      .currenctUser!
+                                      .uid,
+                                  1,
+                                );
                               },
                             )
                           ],
+                        ),
+                      )
+                    : SizedBox(),
+              ),
+              Obx(
+                () => controller.isRewardReady.value == true
+                    ? Container(
+                        margin: EdgeInsets.only(top: 32),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.initRewardedAd(
+                                context.read<AuthProvider>().currenctUser!.uid);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.blueAccent),
+                          ),
+                          child: Text(
+                            'Get 2 free decision',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       )
                     : SizedBox(),

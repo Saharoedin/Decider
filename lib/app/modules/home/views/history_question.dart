@@ -82,18 +82,7 @@ class HistoryQuestion extends StatelessWidget {
                         )..load();
                       }
 
-                      return isShowBanner
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  child: AdWidget(ad: bannerAd!),
-                                ),
-                                HistoryItem(q: q)
-                              ],
-                            )
-                          : HistoryItem(q: q);
+                      return HistoryItem(q: q);
                     },
                   );
                 },

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:onepref/onepref.dart';
 
 class HomeController extends GetxController {
   TextEditingController txtQuestion = TextEditingController();
@@ -40,22 +41,23 @@ class HomeController extends GetxController {
     Question data,
     String uid,
   ) async {
-    await QuestionProvider().saveToDatabase(data);
-    // if (account.value.bank > 0) {
-    // }
-    account.value.uid = uid;
-    account.value.bank -= 1;
-    account.value.nextFreeQuestion =
-        DateTime.now().add(Duration(seconds: account.value.bank == 0 ? 25 : 5));
-    await AccountProvider().updateAccountInformation(account.value, uid);
+    if (OnePref.getPremium() == false) {
+      await QuestionProvider().saveToDatabase(data);
+      account.value.uid = uid;
+      account.value.bank -= 1;
+      account.value.nextFreeQuestion = DateTime.now()
+          .add(Duration(seconds: account.value.bank == 0 ? 25 : 5));
+      await AccountProvider().updateAccountInformation(account.value, uid);
+      if (account.value.bank == 0) {
+        question.value = '${data.query}';
+        answer.value = '${data.answer}';
+      }
+    } else {
+      await QuestionProvider().saveToDatabase(data);
+    }
     EasyLoading.showSuccess('Data successfully stored');
     await Future.delayed(Duration(seconds: 5));
     clearInput();
-    if (account.value.bank == 0) {
-      // isFormAvailable.value = false;
-      question.value = '${data.query}';
-      answer.value = '${data.answer}';
-    }
   }
 
   void updateBankAccount(String uid, int qty) async {

@@ -5,6 +5,7 @@ import 'package:decider/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:onepref/onepref.dart';
 import 'package:provider/provider.dart';
 
 import 'package:get/get.dart';
@@ -17,9 +18,11 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.initBannerAd();
-    });
+    if (OnePref.getPremium() == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.initBannerAd();
+      });
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -60,77 +63,90 @@ class HomeView extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Obx(
-                () => StreamBuilder(
-                  stream: controller.accountInformation.value,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      return CircularProgressIndicator();
+              OnePref.getPremium() == false
+                  ? Obx(
+                      () => Column(
+                        children: [
+                          StreamBuilder(
+                            stream: controller.accountInformation.value,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting)
+                                return CircularProgressIndicator();
 
-                    if (!snapshot.hasData) return Text('Decision Left : ##');
+                              if (!snapshot.hasData)
+                                return Text('Decision Left : ##');
 
-                    return Text(
-                      'Decision Left : ${controller.account.value.bank}',
-                    );
-                  },
-                ),
-              ),
-              Obx(
-                () => controller.account.value.bank == 0
-                    ? Container(
-                        margin: EdgeInsets.only(top: 8),
-                        child: Column(
-                          children: [
-                            Text(
-                              'You will get one free decision in',
-                            ),
-                            Countdown(
-                              seconds: controller.account.value.nextFreeQuestion
-                                      ?.difference((DateTime.now()))
-                                      .inSeconds ??
-                                  0,
-                              build: (BuildContext context, double time) => Text(
-                                  '${NumberFormat('00', 'en_US').format(time ~/ 3600)}:${NumberFormat('00', 'en_US').format((time % 3600) ~/ 60)}:${NumberFormat('00', 'en_US').format(time.toInt() % 60)}'),
-                              interval: Duration(seconds: 1),
-                              onFinished: () {
-                                controller.clearInput();
-                                controller.updateBankAccount(
-                                  context
-                                      .read<AuthProvider>()
-                                      .currenctUser!
-                                      .uid,
-                                  1,
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      )
-                    : SizedBox(),
-              ),
-              Obx(
-                () => controller.isRewardReady.value == true
-                    ? Container(
-                        margin: EdgeInsets.only(top: 32),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            controller.initRewardedAd(
-                                context.read<AuthProvider>().currenctUser!.uid);
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blueAccent),
+                              return Text(
+                                'Decision Left : ${controller.account.value.bank}',
+                              );
+                            },
                           ),
-                          child: Text(
-                            'Get 2 free decision',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          Obx(
+                            () => controller.account.value.bank == 0
+                                ? Container(
+                                    margin: EdgeInsets.only(top: 8),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'You will get one free decision in',
+                                        ),
+                                        Countdown(
+                                          seconds: controller.account.value
+                                                  .nextFreeQuestion
+                                                  ?.difference((DateTime.now()))
+                                                  .inSeconds ??
+                                              0,
+                                          build: (BuildContext context,
+                                                  double time) =>
+                                              Text(
+                                                  '${NumberFormat('00', 'en_US').format(time ~/ 3600)}:${NumberFormat('00', 'en_US').format((time % 3600) ~/ 60)}:${NumberFormat('00', 'en_US').format(time.toInt() % 60)}'),
+                                          interval: Duration(seconds: 1),
+                                          onFinished: () {
+                                            controller.clearInput();
+                                            controller.updateBankAccount(
+                                              context
+                                                  .read<AuthProvider>()
+                                                  .currenctUser!
+                                                  .uid,
+                                              1,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
                           ),
-                        ),
-                      )
-                    : SizedBox(),
-              ),
+                          Obx(
+                            () => controller.isRewardReady.value == true
+                                ? Container(
+                                    margin: EdgeInsets.only(top: 32),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        controller.initRewardedAd(context
+                                            .read<AuthProvider>()
+                                            .currenctUser!
+                                            .uid);
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Colors.blueAccent),
+                                      ),
+                                      child: Text(
+                                        'Get 2 free decision',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -191,7 +207,9 @@ class HomeView extends GetView<HomeController> {
                                             false) {
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            controller.initIntertitialAd();
+                                            if (OnePref.getPremium() == false) {
+                                              controller.initIntertitialAd();
+                                            }
                                             controller.getAnswer();
                                             controller.saveToDatabase(
                                               Question(
@@ -263,9 +281,12 @@ class HomeView extends GetView<HomeController> {
                   GestureDetector(
                     onTap: () => Get.toNamed(Routes.SUBSCRIPTION),
                     child: Text(
-                      'Free',
+                      '${OnePref.getPremium() == true ? 'Premium' : 'Free'}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: OnePref.getPremium() == true
+                            ? Colors.blue
+                            : Colors.grey,
                       ),
                     ),
                   ),
@@ -280,7 +301,9 @@ class HomeView extends GetView<HomeController> {
                         width: Get.width,
                         child: AdWidget(ad: controller.bannerAd!),
                       )
-                    : SizedBox(),
+                    : SizedBox(
+                        height: 16,
+                      ),
               )
             ],
           ),

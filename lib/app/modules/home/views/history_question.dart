@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:onepref/onepref.dart';
 
 class HistoryQuestion extends StatelessWidget {
   const HistoryQuestion({super.key});
@@ -69,17 +70,19 @@ class HistoryQuestion extends StatelessWidget {
                       Question q =
                           Question.fromJson(doc.data() as Map<String, dynamic>);
 
-                      final isShowBanner = index % 5 == 0;
+                      if (OnePref.getPremium() == false) {
+                        final isShowBanner = index % 5 == 0;
 
-                      BannerAd? bannerAd;
+                        BannerAd? bannerAd;
 
-                      if (isShowBanner) {
-                        bannerAd = BannerAd(
-                          size: AdSize.fullBanner,
-                          adUnitId: AdmobProvider().bannerUnitId!,
-                          listener: AdmobProvider().bannerAdListener,
-                          request: AdRequest(),
-                        )..load();
+                        if (isShowBanner) {
+                          bannerAd = BannerAd(
+                            size: AdSize.fullBanner,
+                            adUnitId: AdmobProvider().bannerUnitId!,
+                            listener: AdmobProvider().bannerAdListener,
+                            request: AdRequest(),
+                          )..load();
+                        }
                       }
 
                       return HistoryItem(q: q);

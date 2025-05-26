@@ -77,13 +77,16 @@ class StoreController extends GetxController {
   void giveUserDecisions(PurchaseDetails purchaseDetails) async {
     for (var product in storeProductIds) {
       if (product.id == purchaseDetails.productID) {
-        print(product.reward);
+        print('object');
         homeController.account.value.bank =
             homeController.account.value.bank + product.reward!;
+        homeController.account.refresh();
+        EasyLoading.showSuccess(
+            '${product.reward!} Decisions added to your account!');
         // OnePref.setInt('decisions', decision.value);
-        // homeController.updateBankAccount(AuthProvider().currenctUser!.uid,
-        //     homeController.account.value.bank);
-        // Get.back();
+        homeController.updateBankAccount(AuthProvider().currenctUser!.uid,
+            homeController.account.value.bank);
+        Get.back();
       }
     }
   }

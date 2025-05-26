@@ -256,7 +256,21 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-              Text('Account Type : Free '),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Account Type : '),
+                  GestureDetector(
+                    onTap: () => Get.toNamed(Routes.SUBSCRIPTION),
+                    child: Text(
+                      'Free',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Text('${context.read<AuthProvider>().currenctUser!.uid}'),
               Obx(
                 () => controller.isBannerAdReady.value == true

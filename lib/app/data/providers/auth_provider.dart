@@ -8,7 +8,7 @@ class AuthProvider extends GetConnect {
   Future<User?> getOrCreateUser() async {
     if (currenctUser == null) {
       await FirebaseAuth.instance.signInAnonymously();
-      initializeAccount();
+      // initializeAccount();
     }
     return currenctUser;
   }

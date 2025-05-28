@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/splashscreen/bindings/splashscreen_binding.dart';
+import '../modules/splashscreen/views/splashscreen_view.dart';
 import '../modules/store/bindings/store_binding.dart';
 import '../modules/store/views/store_view.dart';
 import '../modules/subscription/bindings/subscription_binding.dart';
@@ -12,7 +14,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASHSCREEN;
 
   static final routes = [
     GetPage(
@@ -29,6 +31,11 @@ class AppPages {
       name: _Paths.SUBSCRIPTION,
       page: () => const SubscriptionView(),
       binding: SubscriptionBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASHSCREEN,
+      page: () => const SplashscreenView(),
+      binding: SplashscreenBinding(),
     ),
   ];
 }

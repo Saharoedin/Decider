@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/store_controller.dart';
-import 'package:onepref/onepref.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 class StoreView extends GetView<StoreController> {

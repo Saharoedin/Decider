@@ -293,18 +293,20 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               Text('${context.read<AuthProvider>().currenctUser!.uid}'),
-              Obx(
-                () => controller.isBannerAdReady.value == true
-                    ? Container(
-                        margin: EdgeInsets.only(top: 16),
-                        height: 60,
-                        width: Get.width,
-                        child: AdWidget(ad: controller.bannerAd!),
-                      )
-                    : SizedBox(
-                        height: 16,
-                      ),
-              )
+              OnePref.getPremium() == false
+                  ? Obx(() => controller.isBannerAdReady.value == true
+                      ? Container(
+                          margin: EdgeInsets.only(top: 16),
+                          height: 60,
+                          width: Get.width,
+                          child: AdWidget(ad: controller.bannerAd!),
+                        )
+                      : SizedBox(
+                          height: 16,
+                        ))
+                  : SizedBox(
+                      height: 16,
+                    ),
             ],
           ),
         ),
